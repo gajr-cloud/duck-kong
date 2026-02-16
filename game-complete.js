@@ -11,12 +11,23 @@ document.addEventListener('DOMContentLoaded', function() {
         let canvas = document.getElementById('gameCanvas');
         let ctx = canvas ? canvas.getContext('2d');
         
-        // Character selection
+        // Character selection - support both click and touch
         document.querySelectorAll('.character-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            const selectCharacter = (e) => {
+                if (e) e.preventDefault();
                 document.querySelectorAll('.character-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedCharacter = btn.dataset.char;
+                console.log('Selected:', selectedCharacter);
+            };
+            
+            // Add both click and touch events
+            btn.addEventListener('click', selectCharacter);
+            btn.addEventListener('touchend', selectCharacter);
+            
+            // Prevent double-firing on some devices
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
             });
         });
         
@@ -486,12 +497,17 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(showNextLine, 500);
         }
         
-        // Start game
-        document.getElementById('startBtn').addEventListener('click', () => {
+        // Start game - support both click and touch
+        const startBtn = document.getElementById('startBtn');
+        const handleStartGame = (e) => {
+            if (e) e.preventDefault();
+            
             if (!selectedCharacter) {
-                alert('Please select a character first!');
+                alert('Please select a duck first!');
                 return;
             }
+            
+            console.log('Starting game with:', selectedCharacter);
             
             document.getElementById('characterSelect').style.display = 'none';
             document.getElementById('charName').textContent = characters[selectedCharacter].name;
@@ -503,6 +519,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 initGame();
                 gameLoop = setInterval(update, 1000/60);
             });
+        };
+        
+        startBtn.addEventListener('click', handleStartGame);
+        startBtn.addEventListener('touchend', handleStartGame);
+        startBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent double-tap zoom
         });
         
         function initGame() {
