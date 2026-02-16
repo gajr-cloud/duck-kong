@@ -121,12 +121,18 @@ if (isMobileDevice()) {
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
-        // Character selection
+        // Character selection - support both click and touch
         document.querySelectorAll('.character-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            const selectCharacter = () => {
                 document.querySelectorAll('.character-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedCharacter = btn.dataset.char;
+            };
+            
+            btn.addEventListener('click', selectCharacter);
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                selectCharacter();
             });
         });
         
@@ -596,8 +602,9 @@ if (isMobileDevice()) {
             setTimeout(showNextLine, 500);
         }
         
-        // Start game
-        document.getElementById('startBtn').addEventListener('click', () => {
+        // Start game - support both click and touch
+        const startButton = document.getElementById('startBtn');
+        const startGame = () => {
             if (!selectedCharacter) {
                 alert('Please select a character first!');
                 return;
@@ -613,6 +620,12 @@ if (isMobileDevice()) {
                 initGame();
                 gameLoop = setInterval(update, 1000/60);
             });
+        };
+        
+        startButton.addEventListener('click', startGame);
+        startButton.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            startGame();
         });
         
         function initGame() {

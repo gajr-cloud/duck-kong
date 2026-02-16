@@ -81,9 +81,14 @@
             min-height: 80px;
         }
         
-        .character-btn:active {
+        .character-btn:active,
+        .character-btn:focus {
             background: #FFD700;
             transform: scale(0.95);
+        }
+        
+        .character-btn:hover {
+            background: #FFD700;
         }
         
         .character-btn.selected {
@@ -126,9 +131,14 @@
             width: 90%;
         }
         
-        #startBtn:active {
+        #startBtn:active,
+        #startBtn:focus {
             background: #228B22;
             transform: scale(0.95);
+        }
+        
+        #startBtn:hover {
+            background: #228B22;
         }
         
         #gameCanvas {
