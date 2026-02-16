@@ -1,0 +1,32 @@
+{
+  "name": "Duck Kong - Feather Farm Adventure",
+  "short_name": "Duck Kong",
+  "description": "Help the brave ducks defeat Gustav and reclaim the Golden Breadcrumb Trophy!",
+  "start_url": "/index.html",
+  "display": "fullscreen",
+  "orientation": "any",
+  "theme_color": "#87CEEB",
+  "background_color": "#87CEEB",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "screenshots": [
+    {
+      "src": "screenshot.png",
+      "sizes": "800x600",
+      "type": "image/png"
+    }
+  ]
+}

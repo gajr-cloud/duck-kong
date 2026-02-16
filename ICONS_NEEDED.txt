@@ -1,0 +1,48 @@
+APP ICONS NEEDED
+================
+
+You need to create two PNG icon files:
+
+1. icon-192.png (192x192 pixels)
+2. icon-512.png (512x512 pixels)
+
+HOW TO CREATE THEM:
+-------------------
+
+Option 1 - Use an Emoji:
+1. Open https://emoji.gg or similar
+2. Find a duck emoji 🦆
+3. Download as 192x192 PNG
+4. Resize to 512x512 for the larger version
+
+Option 2 - Use Canva (Free):
+1. Go to canva.com
+2. Create custom size: 192x192
+3. Add duck emoji or draw simple logo
+4. Download as PNG
+5. Repeat for 512x512
+
+Option 3 - Use GIMP/Photoshop:
+1. Create new image 192x192
+2. Fill with #87CEEB (sky blue)
+3. Add duck emoji or text "DK"
+4. Save as PNG
+5. Repeat for 512x512
+
+QUICK PLACEHOLDER:
+------------------
+You can use ANY square image for now:
+- Screenshot a duck emoji and crop to square
+- Use online tool: https://www.websiteplanet.com/webtools/favicon-generator/
+- Upload any duck image, it will generate both sizes
+
+The app will work without icons, but they're needed for:
+- Home screen appearance
+- App drawer icon
+- Better user experience
+
+Simply save the two files as:
+- icon-192.png
+- icon-512.png
+
+In the same folder as index.html

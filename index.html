@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#87CEEB">
+    <title>Duck Kong - Mobile</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        body {
+            background: #87CEEB;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            touch-action: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 10px;
+        }
+        
+        #title {
+            font-size: 8vw;
+            color: #8B4513;
+            text-shadow: 2px 2px #FFD700;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        #characterSelect {
+            background: #F5DEB3;
+            border: 4px solid #8B4513;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 95vw;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        #characterSelect h2 {
+            color: #8B4513;
+            margin-bottom: 10px;
+            font-size: 6vw;
+        }
+        
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .character-btn {
+            background: #FFE4B5;
+            border: 3px solid #8B4513;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 3.5vw;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.2s;
+            min-height: 80px;
+        }
+        
+        .character-btn:active {
+            background: #FFD700;
+            transform: scale(0.95);
+        }
+        
+        .character-btn.selected {
+            background: #FFD700;
+            border-color: #FF6347;
+        }
+        
+        .ability-info {
+            background: #FFF8DC;
+            border: 2px solid #8B4513;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 3vw;
+        }
+        
+        .ability-info h3 {
+            color: #8B4513;
+            margin-bottom: 8px;
+            font-size: 4vw;
+        }
+        
+        .ability-info p {
+            margin: 5px 0;
+            color: #654321;
+            font-size: 2.5vw;
+        }
+        
+        #startBtn {
+            background: #32CD32;
+            color: white;
+            border: 3px solid #228B22;
+            padding: 12px 25px;
+            font-size: 5vw;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            display: block;
+            margin: 10px auto;
+            width: 90%;
+        }
+        
+        #startBtn:active {
+            background: #228B22;
+            transform: scale(0.95);
+        }
+        
+        #gameCanvas {
+            border: 3px solid #8B4513;
+            background: #D2B48C;
+            display: none;
+            max-width: 100%;
+            max-height: 60vh;
+            touch-action: none;
+        }
+        
+        #gameInfo {
+            background: #F5DEB3;
+            border: 3px solid #8B4513;
+            padding: 8px;
+            width: 100%;
+            border-radius: 5px;
+            display: none;
+            font-size: 3.5vw;
+        }
+        
+        #gameInfo div {
+            display: inline-block;
+            margin-right: 15px;
+            font-weight: bold;
+            color: #8B4513;
+        }
+        
+        #controls {
+            background: #F5DEB3;
+            border: 3px solid #8B4513;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 2.8vw;
+        }
+        
+        #controls h3 {
+            color: #8B4513;
+            margin-bottom: 5px;
+            font-size: 3.5vw;
+        }
+        
+        #controls p {
+            color: #654321;
+            margin: 3px 0;
+        }
+        
+        /* Mobile touch controls */
+        #touchControls {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 180px;
+            background: rgba(139, 69, 19, 0.8);
+            z-index: 100;
+        }
+        
+        .touch-button {
+            position: absolute;
+            background: rgba(255, 228, 181, 0.9);
+            border: 3px solid #8B4513;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #8B4513;
+            touch-action: none;
+            user-select: none;
+        }
+        
+        .touch-button:active {
+            background: rgba(255, 215, 0, 0.9);
+            transform: scale(0.95);
+        }
+        
+        #leftBtn {
+            width: 70px;
+            height: 70px;
+            bottom: 60px;
+            left: 20px;
+        }
+        
+        #rightBtn {
+            width: 70px;
+            height: 70px;
+            bottom: 60px;
+            left: 110px;
+        }
+        
+        #jumpBtn {
+            width: 90px;
+            height: 90px;
+            bottom: 50px;
+            right: 110px;
+        }
+        
+        #specialBtn {
+            width: 70px;
+            height: 70px;
+            bottom: 60px;
+            right: 20px;
+        }
+        
+        #pauseBtn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 228, 181, 0.9);
+            border: 3px solid #8B4513;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #8B4513;
+            display: none;
+            z-index: 101;
+            touch-action: none;
+        }
+        
+        #pauseBtn:active {
+            background: rgba(255, 215, 0, 0.9);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: rgba(0,0,0,0.95);
+            color: white;
+            padding: 20px;
+            border: 5px solid #FFD700;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        
+        .modal-content h2 {
+            font-size: 8vw;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+        
+        .modal-content p {
+            font-size: 4vw;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .modal-content button {
+            background: #32CD32;
+            color: white;
+            border: 3px solid #228B22;
+            padding: 12px 30px;
+            font-size: 4.5vw;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 10px 5px;
+        }
+        
+        .modal-content button:active {
+            background: #228B22;
+            transform: scale(0.95);
+        }
+        
+        @media (orientation: landscape) {
+            #gameCanvas {
+                max-height: 70vh;
+            }
+            
+            #touchControls {
+                height: 150px;
+            }
+            
+            #leftBtn, #rightBtn, #specialBtn {
+                width: 60px;
+                height: 60px;
+                bottom: 45px;
+            }
+            
+            #jumpBtn {
+                width: 80px;
+                height: 80px;
+                bottom: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <h1 id="title">🦆 DUCK KONG 🦆</h1>
+        
+        <div id="characterSelect">
+            <h2>Choose Your Duck!</h2>
+            <div class="character-grid">
+                <button class="character-btn" data-char="mallard">
+                    🦆 Mallard Mac<br><small>Balanced Hero</small><br>
+                    <span style="font-size: 2.5vw; color: #654321;">⚡ Shield (3s)</span>
+                </button>
+                <button class="character-btn" data-char="mandarin">
+                    🦆 Mandarin Ming<br><small>High Jumper</small><br>
+                    <span style="font-size: 2.5vw; color: #654321;">⚡ Double Jump</span>
+                </button>
+                <button class="character-btn" data-char="wood">
+                    🦆 Wood Duck Woody<br><small>Speed Burst</small><br>
+                    <span style="font-size: 2.5vw; color: #654321;">⚡ Dash</span>
+                </button>
+                <button class="character-btn" data-char="runner">
+                    🦆 Runner Rosie<br><small>Fastest</small><br>
+                    <span style="font-size: 2.5vw; color: #654321;">⚡ Sprint</span>
+                </button>
+                <button class="character-btn" data-char="buff">
+                    🦆 Buff Bertha<br><small>Tank</small><br>
+                    <span style="font-size: 2.5vw; color: #654321;">⚡ Smash</span>
+                </button>
+                <button class="character-btn" data-char="magpie">
+                    🦆 Magpie Max<br><small>Trickster</small><br>
+                    <span style="font-size: 2.5vw; color: #654321;">⚡ Bonus</span>
+                </button>
+            </div>
+            
+            <div class="ability-info">
+                <h3>💡 Special Abilities:</h3>
+                <p><strong>Mallard:</strong> Shield blocks damage (3s)</p>
+                <p><strong>Mandarin:</strong> Jump again in mid-air</p>
+                <p><strong>Woody:</strong> Burst forward at speed</p>
+                <p><strong>Rosie:</strong> Ultra-fast sprint (2s)</p>
+                <p><strong>Bertha:</strong> Destroys obstacles</p>
+                <p><strong>Max:</strong> +100 bonus points</p>
+            </div>
+            
+            <button id="startBtn">START GAME</button>
+        </div>
+        
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div id="gameInfo">
+            <div>Score: <span id="score">0</span></div>
+            <div>Lives: <span id="lives">3</span></div>
+            <div>Lvl: <span id="level">1</span></div>
+        </div>
+        
+        <div id="controls">
+            <h3>🎮 Controls</h3>
+            <p>Touch buttons to move, jump, and use abilities!</p>
+            <p>Pause button in top-right to restart or change duck</p>
+        </div>
+    </div>
+    
+    <!-- Touch Controls -->
+    <div id="touchControls">
+        <div class="touch-button" id="leftBtn">←</div>
+        <div class="touch-button" id="rightBtn">→</div>
+        <div class="touch-button" id="jumpBtn">JUMP</div>
+        <div class="touch-button" id="specialBtn">⚡</div>
+    </div>
+    
+    <button id="pauseBtn">⏸</button>
+    
+    <script src="game.js"></script>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
